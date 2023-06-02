@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RhinoStableDiffuison", "RhinoStableDiffuison\RhinoStableDiffuison.csproj", "{3844B5B1-F21A-4752-89A4-566CEA2D362D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UI", "WpfApp1\UI.csproj", "{F745CB75-0E19-4F03-BE4A-BC06174D3A86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3844B5B1-F21A-4752-89A4-566CEA2D362D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3844B5B1-F21A-4752-89A4-566CEA2D362D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3844B5B1-F21A-4752-89A4-566CEA2D362D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3844B5B1-F21A-4752-89A4-566CEA2D362D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F745CB75-0E19-4F03-BE4A-BC06174D3A86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F745CB75-0E19-4F03-BE4A-BC06174D3A86}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F745CB75-0E19-4F03-BE4A-BC06174D3A86}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F745CB75-0E19-4F03-BE4A-BC06174D3A86}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4DA6FB69-C1C2-4359-9C59-D580DB75D810}
+	EndGlobalSection
+EndGlobal
