@@ -50,6 +50,8 @@ namespace RiSC.MainWindowMVVM
 
         public ICommand ToSettingPage { get { return new MainWindowCommand((args) => { FramePage = MainModel.SettingPage; }); } }
 
+        public ICommand IntroDuctionPage { get { return new MainWindowCommand((args) => { FramePage = MainModel.IntroDuctionPage; }); } }
+
         public ICommand DragMove { get { return new MainWindowCommand((args) => { window.DragMove(); }); } }
     }
 }

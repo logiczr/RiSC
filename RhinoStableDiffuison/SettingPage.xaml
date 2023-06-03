@@ -19,6 +19,7 @@
                     <TextBlock Text="ImageSavePath" FontSize="20" Margin="5"></TextBlock>
                     <TextBox IsReadOnly="True" Text="{Binding Path=ImageSavePath}" Margin="5"></TextBox>
                     <Button Content="选择保存图像路径" Command="{Binding Path=SelectedImagePath}"></Button>
+                    <CheckBox Content="AutoSaveImage/自动保存生成图像" FontSize="15" IsChecked="{Binding Path=IsAutoSave, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
                 </StackPanel>
                 
             </Grid>

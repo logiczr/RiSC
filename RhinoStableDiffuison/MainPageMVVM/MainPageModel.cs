@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RhinoStableDiffuison;
 
@@ -33,11 +32,11 @@ namespace RiSC.MainPageMVVM
 
         public string SelectedModel { get; set; }
 
-        public ImageSource ResultImage { get; set; } = new BitmapImage(new Uri(@"G:\\NOIMAGE.png",UriKind.Absolute));
+        public ImageSource ResultImage { get; set; }
 
         public ImageSource ControlNetPageImg { get; set; }
 
-        public ImageSource RhinoCapturePic { get; set; } = new BitmapImage(new Uri(@"G:\\NOIMAGE.png", UriKind.Absolute));
+        public ImageSource RhinoCapturePic { get; set; }
 
         public List<string> ModelName { get; set; } = new List<string>();
 
@@ -63,15 +62,15 @@ namespace RiSC.MainPageMVVM
 
         public string ControlNetModule3 { get; set; }
 
-        public string ControlNetModel { get; set; }
+        public string ControlNetModel { get { return Usersetting.Default.ControlNetModel; } set { Usersetting.Default.ControlNetModel = value; Usersetting.Default.Save(); } }
 
-        public string ControlNetModel1 { get; set; }
+        public string ControlNetModel1 { get { return Usersetting.Default.ControlNetModel1; } set { Usersetting.Default.ControlNetModel1 = value; Usersetting.Default.Save(); } }
 
-        public string ControlNetModel2 { get; set; }
+        public string ControlNetModel2 { get { return Usersetting.Default.ControlNetModel2; } set { Usersetting.Default.ControlNetModel2 = value; Usersetting.Default.Save(); } }
 
-        public string ControlNetModel3 { get; set; }
+        public string ControlNetModel3 { get { return Usersetting.Default.ControlNetModel3; } set { Usersetting.Default.ControlNetModel3 = value; Usersetting.Default.Save(); } }
 
-        public List<string> ControlNetModelList { get; set; } = new List<string>();
+        public List<string> ControlNetModelList { get; set; } = new List<string>() {"No Model" };
 
         public List<string> ControlNetModuleList { get; set; } = new List<string>();
 
@@ -83,7 +82,10 @@ namespace RiSC.MainPageMVVM
 
         public string ImageSavePath { get { return Usersetting.Default.imagepath; } set { Usersetting.Default.imagepath = value; Usersetting.Default.Save(); } }
 
-        
+        public bool IsAutoSave { get { return Usersetting.Default.IsAutoSave; } set { Usersetting.Default.IsAutoSave = value; Usersetting.Default.Save(); } }
+
+
+
         public PayLoad LastTimePayLoad
         {
             get { return new PayLoad(false,new JObject()); }

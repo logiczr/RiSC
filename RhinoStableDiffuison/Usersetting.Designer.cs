@@ -25,7 +25,7 @@ namespace RhinoStableDiffuison {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool IsCNOn {
             get {
                 return ((bool)(this["IsCNOn"]));
@@ -44,6 +44,66 @@ namespace RhinoStableDiffuison {
             }
             set {
                 this["imagepath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ControlNetModel {
+            get {
+                return ((string)(this["ControlNetModel"]));
+            }
+            set {
+                this["ControlNetModel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ControlNetModel1 {
+            get {
+                return ((string)(this["ControlNetModel1"]));
+            }
+            set {
+                this["ControlNetModel1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ControlNetModel2 {
+            get {
+                return ((string)(this["ControlNetModel2"]));
+            }
+            set {
+                this["ControlNetModel2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ControlNetModel3 {
+            get {
+                return ((string)(this["ControlNetModel3"]));
+            }
+            set {
+                this["ControlNetModel3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool IsAutoSave {
+            get {
+                return ((bool)(this["IsAutoSave"]));
+            }
+            set {
+                this["IsAutoSave"] = value;
             }
         }
     }

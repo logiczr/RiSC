@@ -13,29 +13,29 @@
     <Grid Background="Transparent" Opacity="1">
         <Border Background="AliceBlue" CornerRadius="15">
             <Grid Margin="5">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="120"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Border Grid.Column="0" CornerRadius="10" Background="AntiqueWhite">
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="MouseLeftButtonDown">
-                            <b:InvokeCommandAction Command="{Binding Path=DragMove}"></b:InvokeCommandAction>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                    <StackPanel Margin="5">
-                        <Button Style="{DynamicResource ButtonStyle1}" Height="40" Margin="4" Content="HOME PAGE" FontSize="15" Command="{Binding ToHomePage}"></Button>
-                        <Button Style="{DynamicResource ButtonStyle1}" Height="40" Margin="4" Content="ControlNet" FontSize="15" Command="{Binding ToControlNetPage}"></Button>
-                        <Button Style="{DynamicResource ButtonStyle1}" Height="40" Margin="4" Content="SETTINGS" FontSize="15" Command="{Binding ToSettingPage}"></Button>
-                        <Button Style="{DynamicResource ButtonStyle1}" Height="40" Margin="4" Content="developer" FontSize="15" Command="{Binding ToDeveloperPage}"></Button>
-                        <Button Style="{DynamicResource ButtonStyle1}" Height="40" Margin="4" Content="QUIT" FontSize="20" FontWeight="Bold" FontStyle="Oblique" Command="{Binding Path=CloseWindow}"></Button>
-                        <Button Style="{DynamicResource ButtonStyle1}" Height="40" Margin="4" Content="introduction" FontSize="15"></Button>
-                    </StackPanel>
-                </Border>
-                <Border Grid.Column="1" Margin="5" CornerRadius="10" Background="Azure">
-                    <Frame Margin="5" x:Name="Frame" NavigationUIVisibility="Hidden" Content="{Binding Path= FramePage }"></Frame>
-                </Border>
-            </Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="120"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" CornerRadius="10" Background="AntiqueWhite">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="MouseLeftButtonDown">
+                                <b:InvokeCommandAction Command="{Binding Path=DragMove}"></b:InvokeCommandAction>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
+                        <StackPanel Margin="5">
+                            <Button  Height="40" Margin="4" Content="HOME PAGE" FontSize="15" Command="{Binding ToHomePage}"></Button>
+                            <Button  Height="40" Margin="4" Content="ControlNet" FontSize="15" Command="{Binding ToControlNetPage}"></Button>
+                            <Button  Height="40" Margin="4" Content="SETTINGS" FontSize="15" Command="{Binding ToSettingPage}"></Button>
+                            <Button  Height="40" Margin="4" Content="developer" FontSize="15" Command="{Binding ToDeveloperPage}"></Button>
+                            <Button  Height="40" Margin="4" Content="QUIT" FontSize="20" FontWeight="Bold" FontStyle="Oblique" Command="{Binding Path=CloseWindow}"></Button>
+                            <Button  Height="40" Margin="4" Content="introduction" FontSize="15"></Button>
+                        </StackPanel>
+                    </Border>
+                    <Border Grid.Column="1" Margin="5" CornerRadius="10" Background="Azure">
+                        <Frame Margin="5" x:Name="Frame" NavigationUIVisibility="Hidden" Content="{Binding Path= FramePage }"></Frame>
+                    </Border>
+                </Grid>
         </Border>
     </Grid>
 </Window>

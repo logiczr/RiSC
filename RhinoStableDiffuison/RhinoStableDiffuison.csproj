@@ -8,7 +8,6 @@
     <TargetExt>.rhp</TargetExt>
     <UseWpf>true</UseWpf>
 <UseWindowsForms>true</UseWindowsForms>
-<OutputType>Library</OutputType>
 <SignAssembly>False</SignAssembly>
 <IsPublishable>True</IsPublishable>
 <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
@@ -87,11 +86,11 @@
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <Optimize>True</Optimize>
-    <DebugType>none</DebugType>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <DebugType>none</DebugType>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   
 </Project>

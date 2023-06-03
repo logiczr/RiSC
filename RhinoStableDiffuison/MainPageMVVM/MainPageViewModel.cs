@@ -16,7 +16,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Net;
 using System.Threading;
-using static System.Net.Mime.MediaTypeNames;
 using Microsoft.Win32;
 using System.Security.Policy;
 using System.Reflection.Emit;
@@ -40,11 +39,18 @@ namespace RiSC.MainPageMVVM
 
         public MainPageViewModel()
         {
-            ModelDescription();
-            GetSampler();
-            GetUpscaler();
-            GetControlNetModel();
-            GetControlNetModule();
+            try
+            {
+                ModelDescription();
+                GetSampler();
+                GetUpscaler();
+                GetControlNetModel();
+                GetControlNetModule();
+            }
+            catch(Exception e)
+            {
+                System.Windows.MessageBox.Show(e.Message+"StableDiffusion未启动或启动地址非127.0.0.1");
+            }
         }
 
         public void NotifypropertyChanged(string PropName)
@@ -117,6 +123,7 @@ namespace RiSC.MainPageMVVM
         #region
         public string ImageSavePath { get { return Model.ImageSavePath; }set { Model.ImageSavePath = value; NotifypropertyChanged("ImageSavePath"); } }
 
+        public bool IsAutoSave { get { return Model.IsAutoSave; }set { Model.IsAutoSave = value; NotifypropertyChanged("IsAutoSave"); } }
         #endregion
         //setting parameter
 
@@ -134,6 +141,8 @@ namespace RiSC.MainPageMVVM
         public ICommand SelectedImagePath { get { return new MainPageCommand((args) => { SelectedSaveImagePath(); }); } }
 
         public ICommand GetRhinoPics { get { return new MainPageCommand((args) => { GetRhinoPic(); }); } }
+
+        public ICommand SaveControlNetPage { get { return new MainPageCommand((args) => { Usersetting.Default.Save(); }); } }
 
         public ICommand SaveImage { get { return new MainPageCommand((args) => { SavingImage(this.ResultImage, $@"{ImageSavePath}\{DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString()}.png"); }); } }
 
@@ -196,6 +205,7 @@ namespace RiSC.MainPageMVVM
 
         public async void Generateimg()
         {
+            GetRhinoPic();
             IsGenerateEnable = false;
             PayLoad payLoad = new PayLoad(IsControlNetOn, SerControlNetPara
                 (this.ControlNetModule, this.ControlNetModel,
@@ -242,6 +252,7 @@ namespace RiSC.MainPageMVVM
                     this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                 }
             }
+            if (IsAutoSave) { SavingImage(this.ResultImage, $@"{ImageSavePath}\{DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString()}.png"); }
         }
 
         public void AddDeveloperInformation(string Msg)
@@ -414,6 +425,16 @@ namespace RiSC.MainPageMVVM
         {
             getpics command = new getpics();
             RhinoCapturePic = Imaging.CreateBitmapSourceFromHBitmap(command.Bitmap.GetHbitmap(),IntPtr.Zero,Int32Rect.Empty,BitmapSizeOptions.FromEmptyOptions());
+            Bitmap ReadyToEncode = command.Bitmap;
+            using (MemoryStream ms1 = new MemoryStream())
+            {
+                ReadyToEncode.Save(ms1, System.Drawing.Imaging.ImageFormat.Png);
+                byte[] arr1 = new byte[ms1.Length];
+                ms1.Position = 0;
+                ms1.Read(arr1, 0, (int)ms1.Length);
+                ms1.Close();
+                ControlNetInputImage = Convert.ToBase64String(arr1);
+            }
         }
 
         public void SavingImage(ImageSource source,string filepath) 

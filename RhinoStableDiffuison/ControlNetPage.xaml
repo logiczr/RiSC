@@ -20,6 +20,7 @@
                     <StackPanel Margin="5" Orientation="Horizontal">
                         <TextBlock Text="IsControlNetOn" FontSize="15" VerticalAlignment="Center"></TextBlock>
                         <CheckBox Margin="5" IsChecked="{Binding Path=IsControlNetOn}"></CheckBox>
+                        <Button Width="100" Margin="5" Height="25" Content="保存设置" Command="{Binding Path=SaveControlNetPage}"></Button>
                     </StackPanel>
                     <TextBlock Margin="2" Text="First Unit"></TextBlock>
                     <StackPanel Margin="5" Orientation="Horizontal">
