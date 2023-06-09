@@ -29,7 +29,7 @@
                             <Button  Height="40" Margin="4" Content="SETTINGS" FontSize="15" Command="{Binding ToSettingPage}"></Button>
                             <Button  Height="40" Margin="4" Content="developer" FontSize="15" Command="{Binding ToDeveloperPage}"></Button>
                             <Button  Height="40" Margin="4" Content="QUIT" FontSize="20" FontWeight="Bold" FontStyle="Oblique" Command="{Binding Path=CloseWindow}"></Button>
-                            <Button  Height="40" Margin="4" Content="introduction" FontSize="15"></Button>
+                        <Button  Height="40" Margin="4" Content="introduction" FontSize="15" Command="{Binding Path=IntroDuctionPage}"></Button>
                         </StackPanel>
                     </Border>
                     <Border Grid.Column="1" Margin="5" CornerRadius="10" Background="Azure">

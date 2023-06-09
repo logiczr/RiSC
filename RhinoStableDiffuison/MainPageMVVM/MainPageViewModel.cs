@@ -30,6 +30,7 @@ using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using Rhino.Display;
 using RhinoStableDiffuison;
 using System.Windows.Interop;
+using System.Collections;
 
 namespace RiSC.MainPageMVVM
 {
@@ -46,10 +47,11 @@ namespace RiSC.MainPageMVVM
                 GetUpscaler();
                 GetControlNetModel();
                 GetControlNetModule();
+                GetLoraList();
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                System.Windows.MessageBox.Show(e.Message+"StableDiffusion未启动或启动地址非127.0.0.1");
+                System.Windows.MessageBox.Show(e.Message + "StableDiffusion未启动或启动地址非127.0.0.1");
             }
         }
 
@@ -78,6 +80,10 @@ namespace RiSC.MainPageMVVM
         public ImageSource ResultImage { get { return Model.ResultImage; } set { Model.ResultImage = value; NotifypropertyChanged("ResultImage"); } }
 
         public List<string> ModelName { get { return Model.ModelName; } set { Model.ModelName = value; NotifypropertyChanged("ModelName"); } }
+
+        public Dictionary<string, string> LoraList { get { return Model.LoraList; } set { Model.LoraList = value; NotifypropertyChanged("LoraList"); } }
+
+        public KeyValuePair<string,string> SelectedLora { get { return Model.SelectedLora; } set { Model.SelectedLora = value; NotifypropertyChanged("SelectedLora"); } }
 
         public bool IsActivateUpscaler { get { return Model.IsActivateUpscaler; } set { Model.IsActivateUpscaler = value; NotifypropertyChanged("IsActivateUpscaler"); } }
 
@@ -127,6 +133,7 @@ namespace RiSC.MainPageMVVM
         #endregion
         //setting parameter
 
+        #region
         public ImageSource RhinoCapturePic { get { return Model.RhinoCapturePic; } set { Model.RhinoCapturePic = value; NotifypropertyChanged("RhinoCapturePic"); } }
         public ICommand Generate { get { return new MainPageCommand((args) => { Generateimg(); }); } }
 
@@ -144,7 +151,12 @@ namespace RiSC.MainPageMVVM
 
         public ICommand SaveControlNetPage { get { return new MainPageCommand((args) => { Usersetting.Default.Save(); }); } }
 
+        public ICommand SelectedLoraCommand { get { return new MainPageCommand((args) => { LoraSelected(); }); } }
+
         public ICommand SaveImage { get { return new MainPageCommand((args) => { SavingImage(this.ResultImage, $@"{ImageSavePath}\{DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString()}.png"); }); } }
+
+        #endregion
+        //command List
 
         HttpClient Client = new HttpClient();
         HttpClient Client1 = new HttpClient();
@@ -231,7 +243,7 @@ namespace RiSC.MainPageMVVM
             client.BaseAddress = new Uri("http://127.0.0.1:7860/sdapi/v1/txt2img");
             string payload = JsonConvert.SerializeObject(payLoad);
             HttpContent data = new StringContent(payload, Encoding.UTF8, "application/json");
-            var json = await (await client.PostAsync(client.BaseAddress, data)).Content.ReadAsStreamAsync();
+            var json = await (await client.PostAsync(client.BaseAddress, data)).Content.ReadAsStreamAsync();//此处直接await线程阻塞
             byte[] bytes = new byte[1024];
             StringBuilder builder = new StringBuilder();
             int numofbytes = 0;
@@ -306,6 +318,40 @@ namespace RiSC.MainPageMVVM
                 }
             });
             thread.Start();
+        }
+
+        public void GetLoraList() 
+        {
+            string URL = "http://127.0.0.1:7860/sdapi/v1/loras";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
+            request.Method = "GET";
+            Thread thread = new Thread(() =>
+            {
+                var httpresponse = (HttpWebResponse)request.GetResponse();
+                var Stream = httpresponse.GetResponseStream();
+                int NumberofBytes = 0;
+                byte[] buffer = new byte[1024];
+                StringBuilder sb = new StringBuilder();
+                do
+                {
+                    NumberofBytes = Stream.Read(buffer, 0, buffer.Length);
+                    sb.Append(Encoding.UTF8.GetString(buffer, 0, NumberofBytes));
+                }
+                while (NumberofBytes > 0);
+                string ToJson = sb.ToString();
+                JArray LoraList = (JArray)JsonConvert.DeserializeObject(ToJson);
+                foreach (JObject item in LoraList)
+                {
+                    this.LoraList.Add(item["name"].ToString(), item["alias"].ToString());
+                }
+            });
+            thread.Start();
+        }
+
+        public void LoraSelected() 
+        {
+            string AddTxt = $"<lora:{SelectedLora.Value}:1>";
+            this.Prompt = this.Prompt + AddTxt;
         }
 
         public void ControlNetUploadImage() 
@@ -478,7 +524,7 @@ namespace RiSC.MainPageMVVM
             string ControlNetInputImage)
         {
             JArray Json2 = new JArray();
-            if (ControlNetModel != string.Empty && ControlNetModel != null)
+            if (ControlNetModel != string.Empty && ControlNetModel != null&&ControlNetModel!= "No Model")
             {
                 JObject JsonAdd = new JObject();
                 JsonAdd.Add("enabled", true);
@@ -493,7 +539,7 @@ namespace RiSC.MainPageMVVM
                 Json5.Add("enabled", false);
                 Json2.Add(Json5);
             }//0
-            if (ControlNetModel1 != string.Empty && ControlNetModel1 != null)
+            if (ControlNetModel1 != string.Empty && ControlNetModel1 != null && ControlNetModel1 != "No Model")
             {
                 JObject JsonAdd = new JObject();
                 JsonAdd.Add("input_image", ControlNetInputImage);
@@ -508,7 +554,7 @@ namespace RiSC.MainPageMVVM
                 Json5.Add("enabled", false);
                 Json2.Add(Json5);
             }//1
-            if (ControlNetModel2 != string.Empty && ControlNetModel2 != null)
+            if (ControlNetModel2 != string.Empty && ControlNetModel2 != null && ControlNetModel2 != "No Model")
             {
                 JObject JsonAdd = new JObject();
                 JsonAdd.Add("input_image", ControlNetInputImage);
@@ -523,7 +569,7 @@ namespace RiSC.MainPageMVVM
                 Json5.Add("enabled", false);
                 Json2.Add(Json5);
             }//2
-            if (ControlNetModel3 != string.Empty && ControlNetModel3 != null)
+            if (ControlNetModel3 != string.Empty && ControlNetModel3 != null && ControlNetModel3 != "No Model")
             {
                 JObject JsonAdd = new JObject();
                 JsonAdd.Add("input_image", ControlNetInputImage);

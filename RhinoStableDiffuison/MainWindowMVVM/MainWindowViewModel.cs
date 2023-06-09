@@ -34,6 +34,7 @@ namespace RiSC.MainWindowMVVM
             MainModel.ControlNetPage.DataContext = mainPageViewModel;
             MainModel.SettingPage.DataContext = mainPageViewModel;
             MainModel.DeveloperPage.DataContext= mainPageViewModel;
+            MainModel.IntroDuctionPage.DataContext= mainPageViewModel;
         }
 
         public Page FramePage { get { return MainModel.CurrentPage; } set { MainModel.CurrentPage = value; NotifyPropertyChanged("FramePage"); } }

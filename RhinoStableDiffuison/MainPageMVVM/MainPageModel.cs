@@ -40,6 +40,10 @@ namespace RiSC.MainPageMVVM
 
         public List<string> ModelName { get; set; } = new List<string>();
 
+        public Dictionary<string,string> LoraList { get; set; } = new Dictionary<string, string>();
+
+        public KeyValuePair<string, string> SelectedLora { get; set; }
+
         public List<string> UpscalerSampler { get; set; } = new List<string>();
 
         public string UpscalerSelected { get; set; }
