@@ -13,7 +13,7 @@ namespace RhinoStableDiffuison {
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.4.0.0")]
-    internal sealed partial class Usersetting : global::System.Configuration.ApplicationSettingsBase {
+    public sealed partial class Usersetting : global::System.Configuration.ApplicationSettingsBase {
         
         private static Usersetting defaultInstance = ((Usersetting)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Usersetting())));
         
@@ -104,6 +104,18 @@ namespace RhinoStableDiffuison {
             }
             set {
                 this["IsAutoSave"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public double weight1 {
+            get {
+                return ((double)(this["weight1"]));
+            }
+            set {
+                this["weight1"] = value;
             }
         }
     }

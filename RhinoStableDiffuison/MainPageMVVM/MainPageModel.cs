@@ -74,6 +74,14 @@ namespace RiSC.MainPageMVVM
 
         public string ControlNetModel3 { get { return Usersetting.Default.ControlNetModel3; } set { Usersetting.Default.ControlNetModel3 = value; Usersetting.Default.Save(); } }
 
+        public double ControlNetModelWeight { get; set; } = 1;
+
+        public double ControlNetModelWeight1 { get; set; } = 1;
+
+        public double ControlNetModelWeight2 { get; set; } = 1;
+
+        public double ControlNetModelWeight3 { get; set; } = 1;
+
         public List<string> ControlNetModelList { get; set; } = new List<string>() {"No Model" };
 
         public List<string> ControlNetModuleList { get; set; } = new List<string>();

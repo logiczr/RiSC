@@ -61,7 +61,7 @@
   
   <ItemGroup>
     <None Update="Usersetting.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
+      <Generator>PublicSettingsSingleFileGenerator</Generator>
       <LastGenOutput>Usersetting.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>

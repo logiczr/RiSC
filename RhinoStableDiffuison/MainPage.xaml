@@ -74,7 +74,6 @@
                     <Button Margin="10" Height="25" Content="GENERATE" IsEnabled="{Binding IsGenerateEnable, NotifyOnSourceUpdated=True}" Command="{Binding Path=Generate}"></Button>
                 </StackPanel>
                 <StackPanel Grid.Column="1" Margin="5">
-                    <TextBlock Text="RiSC" FontSize="50" FontWeight="Bold" FontStyle="Oblique" HorizontalAlignment="Center"></TextBlock>
                     <Image Margin="10" Height="200" Source="{Binding Path=ResultImage}"></Image>
                     <Button Margin="5" Content="Save" Command="{Binding Path=SaveImage}"></Button>
                     <Button Margin="5" Content="获取rhino截图" Command="{Binding Path=GetRhinoPics}"></Button>

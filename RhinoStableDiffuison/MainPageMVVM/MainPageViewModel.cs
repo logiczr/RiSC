@@ -121,6 +121,10 @@ namespace RiSC.MainPageMVVM
         public string ControlNetModule1 { get { return Model.ControlNetModule1; } set { Model.ControlNetModule1 = value; NotifypropertyChanged("ControlNetModule1"); } }
         public string ControlNetModule2 { get { return Model.ControlNetModule2; } set { Model.ControlNetModule2 = value; NotifypropertyChanged("ControlNetModule2"); } }
         public string ControlNetModule3 { get { return Model.ControlNetModule3; } set { Model.ControlNetModule3 = value; NotifypropertyChanged("ControlNetModule3"); } }
+        public double ControlNetModelWeight { get { return Model.ControlNetModelWeight; }set { Model.ControlNetModelWeight = value;NotifypropertyChanged("ControlNetModelWeight"); } }
+        public double ControlNetModelWeight1 { get { return Model.ControlNetModelWeight1; } set { Model.ControlNetModelWeight1 = value; NotifypropertyChanged("ControlNetModelWeight1"); } }
+        public double ControlNetModelWeight2 { get { return Model.ControlNetModelWeight2; } set { Model.ControlNetModelWeight2 = value; NotifypropertyChanged("ControlNetModelWeight2"); } }
+        public double ControlNetModelWeight3 { get { return Model.ControlNetModelWeight3; } set { Model.ControlNetModelWeight3 = value; NotifypropertyChanged("ControlNetModelWeight3"); } }
         public string ControlNetInputImage { get { return Model.ControlNetInputImage; } set { Model.ControlNetInputImage = value; NotifypropertyChanged("ControlNetInputImage"); } }
         public ImageSource ControlNetPageImg { get { return Model.ControlNetPageImg; } set { Model.ControlNetPageImg = value; NotifypropertyChanged("ControlNetPageImg"); } }
         #endregion
@@ -135,7 +139,7 @@ namespace RiSC.MainPageMVVM
 
         #region
         public ImageSource RhinoCapturePic { get { return Model.RhinoCapturePic; } set { Model.RhinoCapturePic = value; NotifypropertyChanged("RhinoCapturePic"); } }
-        public ICommand Generate { get { return new MainPageCommand((args) => { Generateimg(); }); } }
+        public ICommand Generate { get { return new MainPageCommand((args) => { Generateimg2(); }); } }
 
         public ICommand ChangeModel { get { return new MainPageCommand((args) => { ModelChanged(); }); } }
 
@@ -259,6 +263,71 @@ namespace RiSC.MainPageMVVM
             if (str2 == null) { AddDeveloperInformation(jpic.ToString()); }
             else
             {                
+                using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(str2)))
+                {
+                    this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                }
+            }
+            if (IsAutoSave) { SavingImage(this.ResultImage, $@"{ImageSavePath}\{DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString()}.png"); }
+        }
+
+        public async void Generateimg2()
+        {
+            GetRhinoPic();
+            IsGenerateEnable = false;
+            PayLoad payLoad = new PayLoad(IsControlNetOn, SerControlNetPara
+                (this.ControlNetModule, this.ControlNetModel,
+                this.ControlNetModule1, this.ControlNetModel1,
+                this.ControlNetModule2, this.ControlNetModel2,
+                this.ControlNetModule3, this.ControlNetModel3,
+                this.ControlNetInputImage))
+            {
+                steps = this.steps,
+                height = this.Height,
+                width = this.Width,
+                prompt = this.Prompt,
+                sampler_name = this.SamplerSelected,
+                negative_prompt = this.NegativePrompt,
+                enable_hr = this.IsActivateUpscaler,
+                hr_upscaler = this.UpscalerSelected,
+                hr_second_pass_steps = this.DenosingStep,
+                denoising_strength = this.DensoingStrength,
+                hr_scale = this.Scale,
+            };
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:7860/sdapi/v1/txt2img");
+            request.Method = "POST";
+            request.ContentType = "application/json";
+            string datapost = JsonConvert.SerializeObject(payLoad);
+            AddDeveloperInformation("start");
+            using (var streamwriter = new StreamWriter(request.GetRequestStream()))
+            {
+                streamwriter.Write(datapost);
+            }
+            byte[] bytes = new byte[1024];
+            StringBuilder builder = new StringBuilder();
+            int numofbytes = 0;
+            //此时会阻塞并等待StableDiffusion返回图像
+            Stream json = null;
+            await Task.Run(async () => 
+            {
+                 new Thread(GetProgressImage).Start();   
+                 json =  (await request.GetResponseAsync()).GetResponseStream();
+                    
+            });
+            
+            AddDeveloperInformation("ends");
+            do
+            {
+                numofbytes = json.Read(bytes, 0, bytes.Length);
+                builder.Append(Encoding.UTF8.GetString(bytes, 0, numofbytes));
+            } while (numofbytes > 0);
+            json.Close();
+            IsGenerateEnable = true;
+            var jpic = JObject.Parse(builder.ToString());
+            var str2 = jpic["images"][0].ToString();
+            if (str2 == null) { AddDeveloperInformation(jpic.ToString()); }
+            else
+            {
                 using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(str2)))
                 {
                     this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
@@ -433,7 +502,7 @@ namespace RiSC.MainPageMVVM
         {
             do
             {
-                Thread.Sleep(1500);
+                Thread.Sleep(500);
                 string URL = "http://127.0.0.1:7860/sdapi/v1/progress?skip_current_image=false";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
                 request.Method = "GET";
@@ -460,7 +529,15 @@ namespace RiSC.MainPageMVVM
                     var str = FromStream["current_image"].ToString();
                     using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(str)))
                     {
-                        this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        try 
+                        {
+                            System.Windows.Application.Current.Dispatcher.Invoke
+                                (
+                                new Action(() => { this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); })
+                                ) ;
+                                //this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                        }
+                        catch (ArgumentException ex) { continue; }
                     }
                 }
             }while(true);
@@ -530,7 +607,8 @@ namespace RiSC.MainPageMVVM
                 JsonAdd.Add("enabled", true);
                 JsonAdd.Add("input_image", ControlNetInputImage);
                 JsonAdd.Add("module", ControlNetModule);
-                JsonAdd.Add("model", ControlNetModel);               
+                JsonAdd.Add("model", ControlNetModel);
+                JsonAdd.Add("weight", this.ControlNetModelWeight);
                 Json2.Add(JsonAdd);
             }
             else 
@@ -545,6 +623,7 @@ namespace RiSC.MainPageMVVM
                 JsonAdd.Add("input_image", ControlNetInputImage);
                 JsonAdd.Add("module", ControlNetModule1);
                 JsonAdd.Add("model", ControlNetModel1);
+                JsonAdd.Add("weight", this.ControlNetModelWeight1);
                 JsonAdd.Add("enabled", true);
                 Json2.Add(JsonAdd);
             }
@@ -560,6 +639,7 @@ namespace RiSC.MainPageMVVM
                 JsonAdd.Add("input_image", ControlNetInputImage);
                 JsonAdd.Add("module", ControlNetModule2);
                 JsonAdd.Add("model", ControlNetModel2);
+                JsonAdd.Add("weight", this.ControlNetModelWeight2);
                 JsonAdd.Add("enabled", true);
                 Json2.Add(JsonAdd);
             }
@@ -575,6 +655,7 @@ namespace RiSC.MainPageMVVM
                 JsonAdd.Add("input_image", ControlNetInputImage);
                 JsonAdd.Add("module", ControlNetModule3);
                 JsonAdd.Add("model", ControlNetModel3);
+                JsonAdd.Add("weight", this.ControlNetModelWeight3);
                 JsonAdd.Add("enabled", true);
                 Json2.Add(JsonAdd);
             }
