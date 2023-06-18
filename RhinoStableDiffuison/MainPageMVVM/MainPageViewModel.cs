@@ -518,9 +518,10 @@ namespace RiSC.MainPageMVVM
                     sb.Append(Encoding.UTF8.GetString(buffer, 0, NumberofBytes));
                 }
                 while (NumberofBytes > 0);
+                Stream.Close();
                 string ToJson = sb.ToString();
                 JObject FromStream = (JObject)JsonConvert.DeserializeObject(ToJson);
-                if ((int)FromStream["state"]["job_count"] == -1 || FromStream["current_image"] == null) 
+                if ((int)FromStream["state"]["job_count"] == 0 && FromStream["current_image"] == null) 
                 {
                     AddDeveloperInformation("stop getting progress image");
                     break; 
@@ -539,6 +540,7 @@ namespace RiSC.MainPageMVVM
                                     try
                                     {
                                         this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                        AddDeveloperInformation("updated");
                                     }
                                     catch (NullReferenceException ex) {  }
                                 })
