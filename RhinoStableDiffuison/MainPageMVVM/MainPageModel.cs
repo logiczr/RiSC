@@ -100,8 +100,24 @@ namespace RiSC.MainPageMVVM
 
         public PayLoad LastTimePayLoad
         {
-            get { return new PayLoad(false,new JObject()); }
-            set { LastTimePayLoad = value; }
+            get { return (PayLoad)JsonConvert.DeserializeObject(PayLoadSave); }
+            set { PayLoadSave = JsonConvert.SerializeObject(value); }
+        }
+
+        public string PayLoadSave { get { return Usersetting.Default.payloadsave; } set { Usersetting.Default.payloadsave = value;Usersetting.Default.Save(); } }
+    }
+
+    public class ConvertToPayLoad 
+    {
+        public PayLoad Converter(JObject obj) 
+        {
+            return new PayLoad((bool)obj["IsControlNetOn"], (JObject)obj["ControlNetParam"]) 
+            {
+            height= (int)obj["height"],
+            width= (int)obj["width"],   
+            steps = (int)obj["steps"],
+            prompt = (string)obj["prompt"]
+            };
         }
     }
 }

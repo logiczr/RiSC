@@ -118,5 +118,17 @@ namespace RhinoStableDiffuison {
                 this["weight1"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string payloadsave {
+            get {
+                return ((string)(this["payloadsave"]));
+            }
+            set {
+                this["payloadsave"] = value;
+            }
+        }
     }
 }

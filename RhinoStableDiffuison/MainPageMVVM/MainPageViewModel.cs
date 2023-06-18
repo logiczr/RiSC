@@ -294,6 +294,7 @@ namespace RiSC.MainPageMVVM
                 denoising_strength = this.DensoingStrength,
                 hr_scale = this.Scale,
             };
+            LastTimePayLoad = payLoad;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:7860/sdapi/v1/txt2img");
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -542,7 +543,7 @@ namespace RiSC.MainPageMVVM
                 }
             }while(true);
 
-        }
+        }//获取进程图像
 
         public void GetRhinoPic() 
         {
