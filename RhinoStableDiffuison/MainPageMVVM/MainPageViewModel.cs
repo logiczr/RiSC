@@ -520,7 +520,7 @@ namespace RiSC.MainPageMVVM
                 while (NumberofBytes > 0);
                 string ToJson = sb.ToString();
                 JObject FromStream = (JObject)JsonConvert.DeserializeObject(ToJson);
-                if ((int)FromStream["state"]["job_count"] == -1 && FromStream["current_image"] == null) 
+                if ((int)FromStream["state"]["job_count"] == -1 || FromStream["current_image"] == null) 
                 {
                     AddDeveloperInformation("stop getting progress image");
                     break; 
@@ -530,13 +530,20 @@ namespace RiSC.MainPageMVVM
                     var str = FromStream["current_image"].ToString();
                     using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(str)))
                     {
-                        try 
+                        try
                         {
                             System.Windows.Application.Current.Dispatcher.Invoke
                                 (
-                                new Action(() => { this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions()); })
-                                ) ;
-                                //this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                new Action(() =>
+                                {
+                                    try
+                                    {
+                                        this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
+                                    }
+                                    catch (NullReferenceException ex) {  }
+                                })
+                                );
+                            //this.ResultImage = System.Windows.Interop.Imaging.CreateBitmapSourceFromHBitmap((new Bitmap(ms).GetHbitmap()), IntPtr.Zero, Int32Rect.Empty, BitmapSizeOptions.FromEmptyOptions());
                         }
                         catch (ArgumentException ex) { continue; }
                     }

@@ -24,7 +24,7 @@ namespace RiSC.MainPageMVVM
 
         public string Prompt { get; set; } = "dog";
 
-        public string NegativePrompt { get; set; } = null;
+        public string NegativePrompt { get; set; } = "";
 
         public string SamplerSelected { get; set; } = "Euler a";
 
@@ -100,7 +100,7 @@ namespace RiSC.MainPageMVVM
 
         public PayLoad LastTimePayLoad
         {
-            get { return (PayLoad)JsonConvert.DeserializeObject(PayLoadSave); }
+            get { return ConvertToPayLoad.Converter(IsControlNetOn,(JObject)JsonConvert.DeserializeObject(PayLoadSave)); }
             set { PayLoadSave = JsonConvert.SerializeObject(value); }
         }
 
@@ -109,14 +109,21 @@ namespace RiSC.MainPageMVVM
 
     public class ConvertToPayLoad 
     {
-        public PayLoad Converter(JObject obj) 
+        public static PayLoad Converter(bool IsCNOn,JObject obj) 
         {
-            return new PayLoad((bool)obj["IsControlNetOn"], (JObject)obj["ControlNetParam"]) 
+            return new PayLoad(IsCNOn, (JObject)obj["ControlNetParam"]) 
             {
             height= (int)obj["height"],
             width= (int)obj["width"],   
             steps = (int)obj["steps"],
-            prompt = (string)obj["prompt"]
+            prompt = (string)obj["prompt"],
+            negative_prompt = (string)obj["negative_prompt"],
+                hr_scale = (int)obj["hr_scale"],
+                hr_second_pass_steps = (int)obj["hr_second_pass_steps"],
+                denoising_strength = (double)obj["denoising_strength"],
+                enable_hr = (bool)obj["enable_hr"]
+
+
             };
         }
     }
