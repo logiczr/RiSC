@@ -118,12 +118,11 @@ namespace RiSC.MainPageMVVM
             steps = (int)obj["steps"],
             prompt = (string)obj["prompt"],
             negative_prompt = (string)obj["negative_prompt"],
-                hr_scale = (int)obj["hr_scale"],
-                hr_second_pass_steps = (int)obj["hr_second_pass_steps"],
-                denoising_strength = (double)obj["denoising_strength"],
-                enable_hr = (bool)obj["enable_hr"]
-
-
+            hr_scale = (int)obj["hr_scale"],
+            hr_second_pass_steps = (int)obj["hr_second_pass_steps"],
+            denoising_strength = (double)obj["denoising_strength"],
+            enable_hr = (bool)obj["enable_hr"],
+            alwayson_scripts = (JObject)obj["alwayson_scripts"]
             };
         }
     }

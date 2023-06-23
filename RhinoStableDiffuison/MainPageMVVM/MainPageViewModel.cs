@@ -93,7 +93,7 @@ namespace RiSC.MainPageMVVM
 
         public double DensoingStrength { get { return Model.DenoisingStrength; } set { Model.DenoisingStrength = value; AddDeveloperInformation($"setting value to{value}"); NotifypropertyChanged("DenoisingStrength"); } }
 
-        public string SelectedModel { get { return Model.SelectedModel; } set { Model.SelectedModel = value; NotifypropertyChanged("SelectedModel"); } }
+        public string SelectedModel { get { return Model.SelectedModel; } set { Model.SelectedModel = value; NotifypropertyChanged("SelectedModel");SetAdditionalPara(); } }
 
         public List<string> SamplerName { get { return Model.Sampler; } set { Model.Sampler = value; NotifypropertyChanged("SamplerName"); } }
 
@@ -242,7 +242,7 @@ namespace RiSC.MainPageMVVM
                 denoising_strength = this.DensoingStrength,
                 hr_scale = this.Scale,
             };
-            //this.LastTimePayLoad= payLoad;
+            this.LastTimePayLoad= payLoad;
             HttpClient client = new HttpClient();
             client.BaseAddress = new Uri("http://127.0.0.1:7860/sdapi/v1/txt2img");
             string payload = JsonConvert.SerializeObject(payLoad);
@@ -593,6 +593,12 @@ namespace RiSC.MainPageMVVM
             this.UpscalerSelected = load.hr_upscaler;
             this.SamplerSelected = load.sampler_name;
             this.Scale = load.hr_scale;
+
+        }
+
+        public void SetAdditionalPara() 
+        {
+           
         }
 
         public void SelectedSaveImagePath() 
@@ -678,7 +684,7 @@ namespace RiSC.MainPageMVVM
             JObject Json3 = new JObject();
             Json3.Add("args",Json2);
             JObject Json4 = new JObject();
-            Json4.Add("controlnet", Json3);            
+            Json4.Add("controlnet", Json3);         
             return Json4;
         }
     }
