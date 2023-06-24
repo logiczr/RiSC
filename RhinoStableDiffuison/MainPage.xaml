@@ -11,13 +11,13 @@
 
     <Grid Background="Transparent" SnapsToDevicePixels="False">
         <Border CornerRadius="5" Background="#FFFFEBD8">
-            <Grid Margin="15">
+            <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <StackPanel>
-                    <TextBlock Text="Home Page" FontSize="30" HorizontalAlignment="Center" FontStyle="Oblique"></TextBlock>
+                    
                     <StackPanel Orientation="Horizontal">
                         <TextBlock VerticalAlignment="Center" Text="Steps" Margin="2"></TextBlock>
                         <TextBox VerticalAlignment="Center" x:Name="steps" Width="45" Margin="2" Text="{Binding Path=steps, UpdateSourceTrigger=PropertyChanged}"></TextBox>
@@ -36,7 +36,7 @@
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="ModelName" Margin="5"></TextBlock>
-                        <ComboBox Width="140" Height="20" FontSize="10" ItemsSource="{Binding Path=ModelName}" SelectedItem="{Binding Path=SelectedModel}" SelectedIndex="0">
+                        <ComboBox Width="140" Height="20" FontSize="12" ItemsSource="{Binding Path=ModelName}" SelectedItem="{Binding Path=SelectedModel}" SelectedIndex="0">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="SelectionChanged">
                                     <b:InvokeCommandAction Command="{Binding ChangeModel}"/>
@@ -44,11 +44,11 @@
                             </b:Interaction.Triggers>
                         </ComboBox>
                         <TextBlock Text="Sampler" Margin="5"></TextBlock>
-                        <ComboBox Width="140" Height="20" FontSize="10" ItemsSource="{Binding Path=SamplerName}" SelectedItem="{Binding Path=SamplerSelected}" ></ComboBox>
+                        <ComboBox Width="140" Height="20" FontSize="12" ItemsSource="{Binding Path=SamplerName}" SelectedItem="{Binding Path=SamplerSelected}" ></ComboBox>
                     </StackPanel>
                     <StackPanel Orientation="Horizontal">
                         <TextBlock Text="Lora" Margin="5"></TextBlock>
-                        <ComboBox Width="150" ItemsSource="{Binding LoraList}" SelectedItem="{Binding Path=SelectedLora, NotifyOnSourceUpdated=True}" DisplayMemberPath="Key" SelectedValuePath="Value">
+                        <ComboBox Width="150" ItemsSource="{Binding LoraList}" FontSize="12" SelectedItem="{Binding Path=SelectedLora, NotifyOnSourceUpdated=True}" DisplayMemberPath="Key" SelectedValuePath="Value">
                             <b:Interaction.Triggers>
                                 <b:EventTrigger EventName="SelectionChanged">
                                     <b:InvokeCommandAction Command="{Binding SelectedLoraCommand}"/>

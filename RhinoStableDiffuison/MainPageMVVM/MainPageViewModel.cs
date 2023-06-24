@@ -48,6 +48,7 @@ namespace RiSC.MainPageMVVM
                 GetControlNetModel();
                 GetControlNetModule();
                 GetLoraList();
+                
             }
             catch (Exception e)
             {
@@ -93,7 +94,9 @@ namespace RiSC.MainPageMVVM
 
         public double DensoingStrength { get { return Model.DenoisingStrength; } set { Model.DenoisingStrength = value; AddDeveloperInformation($"setting value to{value}"); NotifypropertyChanged("DenoisingStrength"); } }
 
-        public string SelectedModel { get { return Model.SelectedModel; } set { Model.SelectedModel = value; NotifypropertyChanged("SelectedModel");SetAdditionalPara(); } }
+        public string LastTimeModel { get { return Model.LastTimeModel; } set { Model.LastTimeModel = value; } }
+
+        public string SelectedModel { get { return Model.SelectedModel; } set { Model.SelectedModel = value; NotifypropertyChanged("SelectedModel");} }
 
         public List<string> SamplerName { get { return Model.Sampler; } set { Model.Sampler = value; NotifypropertyChanged("SamplerName"); } }
 
@@ -134,6 +137,8 @@ namespace RiSC.MainPageMVVM
         public string ImageSavePath { get { return Model.ImageSavePath; }set { Model.ImageSavePath = value; NotifypropertyChanged("ImageSavePath"); } }
 
         public bool IsAutoSave { get { return Model.IsAutoSave; }set { Model.IsAutoSave = value; NotifypropertyChanged("IsAutoSave"); } }
+
+        public bool IsgetProcessImage { get { return Model.IsgetProcessImage; } set { Model.IsgetProcessImage = value; NotifypropertyChanged("IsgetProcessImage"); } }
         #endregion
         //setting parameter
 
@@ -295,6 +300,7 @@ namespace RiSC.MainPageMVVM
                 hr_scale = this.Scale,
             };
             LastTimePayLoad = payLoad;
+            LastTimeModel = SelectedModel;
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:7860/sdapi/v1/txt2img");
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -311,7 +317,7 @@ namespace RiSC.MainPageMVVM
             Stream json = null;
             await Task.Run(async () => 
             {
-                 new Thread(GetProgressImage).Start();   
+                if (IsgetProcessImage) { new Thread(GetProgressImage).Start(); }                 
                  json =  (await request.GetResponseAsync()).GetResponseStream();
                     
             });
@@ -593,12 +599,8 @@ namespace RiSC.MainPageMVVM
             this.UpscalerSelected = load.hr_upscaler;
             this.SamplerSelected = load.sampler_name;
             this.Scale = load.hr_scale;
-
-        }
-
-        public void SetAdditionalPara() 
-        {
-           
+            this.SelectedModel = LastTimeModel;
+            ModelChanged();
         }
 
         public void SelectedSaveImagePath() 

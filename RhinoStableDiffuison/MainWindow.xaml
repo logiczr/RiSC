@@ -13,14 +13,19 @@
     <Grid Background="Transparent" Opacity="1">
         <Border Background="AliceBlue" CornerRadius="10">
             <DockPanel LastChildFill="True">
-                <DockPanel Height="20" DockPanel.Dock="Top">
-                    <Border CornerRadius="8" Margin="2" Background="#FFDFC4A5">
+                <DockPanel Height="35" DockPanel.Dock="Top">
+                    <Border CornerRadius="8" Margin="2" Background="#FFEDDBC5">
+                        <b:Interaction.Triggers>
+                            <b:EventTrigger EventName="MouseLeftButtonDown">
+                                <b:InvokeCommandAction Command="{Binding Path=DragMove}"></b:InvokeCommandAction>
+                            </b:EventTrigger>
+                        </b:Interaction.Triggers>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                            <Border Background="Beige" Margin="2" CornerRadius="8" Width="12">
-                                <Button Background="Transparent" BorderThickness="0" Content="口" FontSize="5"></Button>
+                            <Border Background="Beige" Margin="2" CornerRadius="8" Width="25">
+                                <Button Background="Transparent" BorderThickness="0" Content="口" FontSize="15"></Button>
                             </Border>
-                            <Border Background="Beige" Margin="2" CornerRadius="8" Width="12">
-                                <Button Background="Transparent" BorderThickness="0" Content="X" FontSize="5"></Button>
+                            <Border Background="Beige" Margin="2" CornerRadius="8" Width="25">
+                                <Button Background="Transparent" BorderThickness="0" Content="X" FontSize="15" Command="{Binding Path=CloseWindow}"></Button>
                             </Border>
                         </StackPanel>
                     </Border>
@@ -46,7 +51,7 @@
                         </StackPanel>
                     </Border>
                     <Border Grid.Column="1" Margin="5" CornerRadius="10" Background="Azure">
-                        <Frame Margin="5" x:Name="Frame" NavigationUIVisibility="Hidden" Content="{Binding Path= FramePage }"></Frame>
+                        <Frame Margin="3" x:Name="Frame" NavigationUIVisibility="Hidden" Content="{Binding Path= FramePage }"></Frame>
                     </Border>
                 </Grid>
             </DockPanel>

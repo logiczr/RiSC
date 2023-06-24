@@ -130,5 +130,29 @@ namespace RhinoStableDiffuison {
                 this["payloadsave"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string LastTimeModel {
+            get {
+                return ((string)(this["LastTimeModel"]));
+            }
+            set {
+                this["LastTimeModel"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GetProcessimg {
+            get {
+                return ((bool)(this["GetProcessimg"]));
+            }
+            set {
+                this["GetProcessimg"] = value;
+            }
+        }
     }
 }

@@ -20,7 +20,7 @@ namespace RiSC.MainPageMVVM
 
         public int Height { get; set; } = 512;
 
-        public double CFGscale { get; set; } = 7.5;
+        public double CFGscale { get; set; } = 7;
 
         public string Prompt { get; set; } = "dog";
 
@@ -31,6 +31,8 @@ namespace RiSC.MainPageMVVM
         public bool IsActivateUpscaler { get; set; } = false;
 
         public string SelectedModel { get; set; }
+
+        public string LastTimeModel { get { return Usersetting.Default.LastTimeModel; } set { Usersetting.Default.LastTimeModel = value; Usersetting.Default.Save(); } }
 
         public ImageSource ResultImage { get; set; }
 
@@ -49,6 +51,8 @@ namespace RiSC.MainPageMVVM
         public string UpscalerSelected { get; set; }
 
         public int Scale { get; set; } = 2;
+
+        public bool IsgetProcessImage { get {return Usersetting.Default.GetProcessimg; } set { Usersetting.Default.GetProcessimg = value; Usersetting.Default.Save(); } }
 
         public int DenosingStep { get; set; } = 10;
 
@@ -119,6 +123,7 @@ namespace RiSC.MainPageMVVM
             prompt = (string)obj["prompt"],
             negative_prompt = (string)obj["negative_prompt"],
             hr_scale = (int)obj["hr_scale"],
+            sampler_name = (string)obj["sampler_name"],
             hr_second_pass_steps = (int)obj["hr_second_pass_steps"],
             denoising_strength = (double)obj["denoising_strength"],
             enable_hr = (bool)obj["enable_hr"],
