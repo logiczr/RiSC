@@ -305,7 +305,7 @@ namespace RiSC.MainPageMVVM
             request.Method = "POST";
             request.ContentType = "application/json";
             string datapost = JsonConvert.SerializeObject(payLoad);
-            AddDeveloperInformation("start");
+            //AddDeveloperInformation("start");
             using (var streamwriter = new StreamWriter(request.GetRequestStream()))
             {
                 streamwriter.Write(datapost);
@@ -317,12 +317,24 @@ namespace RiSC.MainPageMVVM
             Stream json = null;
             await Task.Run(async () => 
             {
-                if (IsgetProcessImage) { new Thread(GetProgressImage).Start(); }                 
-                 json =  (await request.GetResponseAsync()).GetResponseStream();
+                AddDeveloperInformation(IsgetProcessImage.ToString());
+                if (IsgetProcessImage)
+                {
+                    Thread thread = new Thread(GetProgressImage);
+                    thread.Start();
+                    json = (await request.GetResponseAsync()).GetResponseStream();
+                    thread.Abort();
+                }
+                else 
+                {
+                    json = (await request.GetResponseAsync()).GetResponseStream();
+                    AddDeveloperInformation("Not get process Image");
+                }
+                 
                     
             });
             
-            AddDeveloperInformation("ends");
+            //AddDeveloperInformation("ends");
             do
             {
                 numofbytes = json.Read(bytes, 0, bytes.Length);
@@ -509,7 +521,7 @@ namespace RiSC.MainPageMVVM
         {
             do
             {
-                Thread.Sleep(500);
+                Thread.Sleep(300);
                 string URL = "http://127.0.0.1:7860/sdapi/v1/progress?skip_current_image=false";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
                 request.Method = "GET";
