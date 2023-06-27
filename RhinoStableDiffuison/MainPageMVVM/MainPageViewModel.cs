@@ -31,6 +31,8 @@ using Rhino.Display;
 using RhinoStableDiffuison;
 using System.Windows.Interop;
 using System.Collections;
+using System.Net.Sockets;
+using System.Diagnostics;
 
 namespace RiSC.MainPageMVVM
 {
@@ -40,7 +42,7 @@ namespace RiSC.MainPageMVVM
 
         public MainPageViewModel()
         {
-            try
+            if (tryping()) 
             {
                 ModelDescription();
                 GetSampler();
@@ -48,12 +50,9 @@ namespace RiSC.MainPageMVVM
                 GetControlNetModel();
                 GetControlNetModule();
                 GetLoraList();
-                
+                IsAlreadyLink = true;
             }
-            catch (Exception e)
-            {
-                System.Windows.MessageBox.Show(e.Message + "StableDiffusion未启动或启动地址非127.0.0.1");
-            }
+
         }
 
         public void NotifypropertyChanged(string PropName)
@@ -139,6 +138,12 @@ namespace RiSC.MainPageMVVM
         public bool IsAutoSave { get { return Model.IsAutoSave; }set { Model.IsAutoSave = value; NotifypropertyChanged("IsAutoSave"); } }
 
         public bool IsgetProcessImage { get { return Model.IsgetProcessImage; } set { Model.IsgetProcessImage = value; NotifypropertyChanged("IsgetProcessImage"); } }
+
+        public string IPaddress { get { return Model.IPaddress; }set { Model.IPaddress = value; } }
+
+        public string Port { get { return Model.Port; } set { Model.Port = value; } }
+
+        public bool IsAlreadyLink { get; set; }=false;
         #endregion
         //setting parameter
 
@@ -162,17 +167,17 @@ namespace RiSC.MainPageMVVM
 
         public ICommand SelectedLoraCommand { get { return new MainPageCommand((args) => { LoraSelected(); }); } }
 
+        public ICommand VerifyCommand { get { return new MainPageCommand((args) => { Verify(); }); } }
+
         public ICommand SaveImage { get { return new MainPageCommand((args) => { SavingImage(this.ResultImage, $@"{ImageSavePath}\{DateTime.Now.Year.ToString() + DateTime.Now.Month.ToString() + DateTime.Now.Day.ToString() + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString()}.png"); }); } }
 
         #endregion
         //command List
-
         HttpClient Client = new HttpClient();
         HttpClient Client1 = new HttpClient();
-
         public async void ModelDescription()
         {
-            Client.BaseAddress = new Uri("http://127.0.0.1:7860/sdapi/v1/sd-models");
+            Client.BaseAddress = new Uri($"http://{IPaddress}:{Port}/sdapi/v1/sd-models");
             StringBuilder builder = new StringBuilder();
             HttpContent ApplyMessage = new StringContent("{}", encoding: Encoding.UTF8, "application/json");
             int NumberOfBytes = 0;
@@ -195,11 +200,12 @@ namespace RiSC.MainPageMVVM
                 }
             }
             this.SelectedModel = this.ModelName.FirstOrDefault();
+            Client.Dispose();
         }
 
         public async void GetSampler()
         {
-            Client1.BaseAddress = new Uri("http://127.0.0.1:7860/sdapi/v1/samplers");
+            Client1.BaseAddress = new Uri($@"http://{IPaddress}:{Port}/sdapi/v1/samplers");
             StringBuilder builder = new StringBuilder();
             HttpContent ApplyMessage = new StringContent("{}", encoding: Encoding.UTF8, "application/json");
             int NumberOfBytes = 0;
@@ -249,7 +255,7 @@ namespace RiSC.MainPageMVVM
             };
             this.LastTimePayLoad= payLoad;
             HttpClient client = new HttpClient();
-            client.BaseAddress = new Uri("http://127.0.0.1:7860/sdapi/v1/txt2img");
+            client.BaseAddress = new Uri($"http://{IPaddress}:{Port}/sdapi/v1/txt2img");
             string payload = JsonConvert.SerializeObject(payLoad);
             HttpContent data = new StringContent(payload, Encoding.UTF8, "application/json");
             var json = await (await client.PostAsync(client.BaseAddress, data)).Content.ReadAsStreamAsync();//此处直接await线程阻塞
@@ -301,7 +307,7 @@ namespace RiSC.MainPageMVVM
             };
             LastTimePayLoad = payLoad;
             LastTimeModel = SelectedModel;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://127.0.0.1:7860/sdapi/v1/txt2img");
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create($"http://{IPaddress}:{Port}/sdapi/v1/txt2img");
             request.Method = "POST";
             request.ContentType = "application/json";
             string datapost = JsonConvert.SerializeObject(payLoad);
@@ -366,7 +372,7 @@ namespace RiSC.MainPageMVVM
             {
                 { "sd_model_checkpoint", this.SelectedModel.ToString() }
             };
-            string URL = "http://127.0.0.1:7860/sdapi/v1/options";
+            string URL = $"http://{IPaddress}:{Port}/sdapi/v1/options";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
             request.Method = "POST";
             request.ContentType = "application/json";
@@ -382,7 +388,7 @@ namespace RiSC.MainPageMVVM
 
         public void GetUpscaler() 
         {
-            string URL = "http://127.0.0.1:7860/sdapi/v1/upscalers";
+            string URL = $"http://{IPaddress}:{Port}/sdapi/v1/upscalers";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
             request.Method = "GET";
             Thread thread = new Thread(() => 
@@ -410,7 +416,7 @@ namespace RiSC.MainPageMVVM
 
         public void GetLoraList() 
         {
-            string URL = "http://127.0.0.1:7860/sdapi/v1/loras";
+            string URL = $"http://{IPaddress}:{Port}/sdapi/v1/loras";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
             request.Method = "GET";
             Thread thread = new Thread(() =>
@@ -463,7 +469,7 @@ namespace RiSC.MainPageMVVM
 
         public void GetControlNetModel()
         {
-            string URL = "http://127.0.0.1:7860/controlnet/model_list";
+            string URL = $"http://{IPaddress}:{Port}/controlnet/model_list";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
             request.Method = "GET";
             Thread thread = new Thread(() =>
@@ -491,7 +497,7 @@ namespace RiSC.MainPageMVVM
 
         public void GetControlNetModule() 
         {
-            string URL = "http://127.0.0.1:7860/controlnet/module_list?alias_names=false";
+            string URL = $"http://{IPaddress}:{Port}/controlnet/module_list?alias_names=false";
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
             request.Method = "GET";
             Thread thread = new Thread(() =>
@@ -522,7 +528,7 @@ namespace RiSC.MainPageMVVM
             do
             {
                 Thread.Sleep(300);
-                string URL = "http://127.0.0.1:7860/sdapi/v1/progress?skip_current_image=false";
+                string URL = $"http://{IPaddress}:{Port}/sdapi/v1/progress?skip_current_image=false";
                 HttpWebRequest request = (HttpWebRequest)WebRequest.Create(URL);
                 request.Method = "GET";
                 var httpresponse = (HttpWebResponse)request.GetResponse();
@@ -613,6 +619,53 @@ namespace RiSC.MainPageMVVM
             this.Scale = load.hr_scale;
             this.SelectedModel = LastTimeModel;
             ModelChanged();
+        }
+
+        public bool tryping() 
+        {
+            string UrL = $@"http://{IPaddress}:{Port}/internal/ping";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(UrL);
+            request.Method = "GET";
+            try 
+            {
+                
+                var httpresponse = (HttpWebResponse)request.GetResponse();
+                if ((int)httpresponse.StatusCode == 200)
+                {
+                    //System.Windows.MessageBox.Show("成功连接");
+                    return true;
+                }
+                else { return false; }
+            } catch (WebException e) 
+            {
+                System.Windows.MessageBox.Show("未连接到SD，请到设置页面确保IP地址及端口号设置正常");
+                return false;
+            }
+            
+        }
+
+        public void Verify() 
+        {
+            Task.Run(() => 
+            {
+                if (tryping() && IsAlreadyLink == false)
+                {
+                    ModelDescription();
+                    GetSampler();
+                    GetUpscaler();
+                    GetControlNetModel();
+                    GetControlNetModule();
+                    GetLoraList();
+                    System.Windows.MessageBox.Show("成功连接");
+                    IsAlreadyLink = true;
+                }
+                else
+                {
+                    if (IsAlreadyLink == true) { System.Windows.MessageBox.Show("检测到已经成功连接过一次，请勿重复按钮"); }
+                    else { System.Windows.MessageBox.Show("未连接到SD，请确保IP地址及端口号设置正常"); }
+                    /*System.Windows.MessageBox.Show("检测到已经成功连接过一次，请勿重复按钮");*/
+                }
+            });       
         }
 
         public void SelectedSaveImagePath() 

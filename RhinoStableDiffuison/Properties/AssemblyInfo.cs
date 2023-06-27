@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // These will show in Rhino's option dialog, in the tab Plug-ins.
 [assembly: PlugInDescription(DescriptionType.Address, "")]
 [assembly: PlugInDescription(DescriptionType.Country, "")]
-[assembly: PlugInDescription(DescriptionType.Email, "")]
+[assembly: PlugInDescription(DescriptionType.Email, "fdfdfdfau@gmail.com")]
 [assembly: PlugInDescription(DescriptionType.Phone, "")]
 [assembly: PlugInDescription(DescriptionType.Fax, "")]
 [assembly: PlugInDescription(DescriptionType.Organization, "")]

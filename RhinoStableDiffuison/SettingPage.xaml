@@ -3,7 +3,8 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:RiSC" xmlns:mainpagemvvm="clr-namespace:RiSC.MainPageMVVM"
+      xmlns:local="clr-namespace:RiSC"
+      xmlns:mainpagemvvm="clr-namespace:RiSC.MainPageMVVM"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
       Title="SettingPage">
@@ -21,6 +22,12 @@
                     <Button Content="选择保存图像路径" Command="{Binding Path=SelectedImagePath}"></Button>
                     <CheckBox Margin="6" Content="AutoSaveImage/自动保存生成图像" FontSize="14" IsChecked="{Binding Path=IsAutoSave, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
                     <CheckBox Margin="6" Content="ProcessImage/获取生成中图像(实验性功能，谨慎开启)" FontSize="14"  IsChecked="{Binding Path=IsgetProcessImage, UpdateSourceTrigger=PropertyChanged}"></CheckBox>
+                    <TextBlock Text="IP地址/IPaddress" Margin="5" FontSize="12"></TextBlock>
+                    <TextBox Margin="5" Text="{Binding Path=IPaddress, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding ElementName=IsSure, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <TextBlock Text="端口号/Port" Margin="5" FontSize="12"></TextBlock>
+                    <TextBox Margin="5" Text="{Binding Path=Port, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding ElementName=IsSure, UpdateSourceTrigger=PropertyChanged}"></TextBox>
+                    <CheckBox x:Name="IsSure" Content="锁定IP地址和端口号" Margin="5" FontSize="12" IsChecked="False"></CheckBox>
+                    <Button Content="确认IP地址及端口号/Verify" Margin="5" Command="{Binding Path=VerifyCommand}"></Button>
                 </StackPanel>
                 
             </Grid>

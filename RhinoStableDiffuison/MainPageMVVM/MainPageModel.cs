@@ -9,6 +9,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json.Linq;
 using RhinoStableDiffuison;
+using System.Net;
 
 namespace RiSC.MainPageMVVM
 {
@@ -100,7 +101,9 @@ namespace RiSC.MainPageMVVM
 
         public bool IsAutoSave { get { return Usersetting.Default.IsAutoSave; } set { Usersetting.Default.IsAutoSave = value; Usersetting.Default.Save(); } }
 
+        public string IPaddress { get { return Usersetting.Default.IPaddress; } set { Usersetting.Default.IPaddress = value; Usersetting.Default.Save(); } }
 
+        public string Port { get { return Usersetting.Default.Port; } set { Usersetting.Default.Port = value; Usersetting.Default.Save(); } }
 
         public PayLoad LastTimePayLoad
         {
