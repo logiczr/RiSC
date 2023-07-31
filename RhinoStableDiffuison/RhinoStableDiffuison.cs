@@ -9,10 +9,12 @@ using System.Collections.Generic;
 using RiSC.MainPageMVVM;
 using Rhino.Display;
 using System.IO;
+using Eto.Forms;
+using Eto.Threading;
 
 namespace RhinoStableDiffuison
 {
-    public class RhinoStableDiffuison : Command
+    public class RhinoStableDiffuison :Rhino.Commands.Command
     {
         public RhinoStableDiffuison()
         {
@@ -32,15 +34,19 @@ namespace RhinoStableDiffuison
             // TODO: start here modifying the behaviour of your command.
             // ---
             RhinoApp.WriteLine("The {0} command activate.", EnglishName);
+            try
+            {
+                MainWindow window = new MainWindow();
+                window.Show();
+            }
+            catch(Exception e) 
+            {
+                MessageBox.Show(e.Message);
+                Thread.CurrentThread.Abort();
+                return Result.Failure;                
+            }
+            
 
-            //getpics getpics1 = new getpics();
-
-            //System.Drawing.Bitmap bitmap = RhinoDoc.ActiveDoc.Views.ActiveView.CaptureToBitmap();
-            //RhinoApp.WriteLine("The {0} command activate.", EnglishName);
-            //bitmap.Save(@"G:\riscop\aaa.png", System.Drawing.Imaging.ImageFormat.Png);
-
-            MainWindow window = new MainWindow();
-            window.Show();
             return Result.Success;
         }
     }

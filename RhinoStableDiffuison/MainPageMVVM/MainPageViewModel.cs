@@ -48,7 +48,7 @@ namespace RiSC.MainPageMVVM
                 GetSampler();
                 GetUpscaler();
                 GetControlNetModel();
-                GetControlNetModule();
+                GetControlNetModule();               
                 GetLoraList();
                 IsAlreadyLink = true;
             }
@@ -474,22 +474,30 @@ namespace RiSC.MainPageMVVM
             request.Method = "GET";
             Thread thread = new Thread(() =>
             {
-                var httpresponse = (HttpWebResponse)request.GetResponse();
-                var Stream = httpresponse.GetResponseStream();
-                int NumberofBytes = 0;
-                byte[] buffer = new byte[1024];
-                StringBuilder sb = new StringBuilder();
-                do
+                try
                 {
-                    NumberofBytes = Stream.Read(buffer, 0, buffer.Length);
-                    sb.Append(Encoding.UTF8.GetString(buffer, 0, NumberofBytes));
+                    var httpresponse = (HttpWebResponse)request.GetResponse();
+                    var Stream = httpresponse.GetResponseStream();
+                    int NumberofBytes = 0;
+                    byte[] buffer = new byte[1024];
+                    StringBuilder sb = new StringBuilder();
+                    do
+                    {
+                        NumberofBytes = Stream.Read(buffer, 0, buffer.Length);
+                        sb.Append(Encoding.UTF8.GetString(buffer, 0, NumberofBytes));
+                    }
+                    while (NumberofBytes > 0);
+                    string ToJson = sb.ToString();
+                    JObject ControlNetModelList = (JObject)JsonConvert.DeserializeObject(ToJson);
+                    foreach (var item in ControlNetModelList["model_list"])
+                    {
+                        this.ControlNetModelList.Add(item.ToString());
+                    }
                 }
-                while (NumberofBytes > 0);
-                string ToJson = sb.ToString();
-                JObject ControlNetModelList = (JObject)JsonConvert.DeserializeObject(ToJson);
-                foreach (var item in ControlNetModelList["model_list"])
+                catch (Exception e)
                 {
-                    this.ControlNetModelList.Add(item.ToString());
+                    System.Windows.MessageBox.Show("获取controlnet出错"); 
+                    Thread.CurrentThread.Abort();
                 }
             });
             thread.Start();
@@ -502,22 +510,29 @@ namespace RiSC.MainPageMVVM
             request.Method = "GET";
             Thread thread = new Thread(() =>
             {
-                var httpresponse = (HttpWebResponse)request.GetResponse();
-                var Stream = httpresponse.GetResponseStream();
-                int NumberofBytes = 0;
-                byte[] buffer = new byte[1024];
-                StringBuilder sb = new StringBuilder();
-                do
+                try
                 {
-                    NumberofBytes = Stream.Read(buffer, 0, buffer.Length);
-                    sb.Append(Encoding.UTF8.GetString(buffer, 0, NumberofBytes));
+                    var httpresponse = (HttpWebResponse)request.GetResponse();
+                    var Stream = httpresponse.GetResponseStream();
+                    int NumberofBytes = 0;
+                    byte[] buffer = new byte[1024];
+                    StringBuilder sb = new StringBuilder();
+                    do
+                    {
+                        NumberofBytes = Stream.Read(buffer, 0, buffer.Length);
+                        sb.Append(Encoding.UTF8.GetString(buffer, 0, NumberofBytes));
+                    }
+                    while (NumberofBytes > 0);
+                    string ToJson = sb.ToString();
+                    JObject ControlNetModuleList = (JObject)JsonConvert.DeserializeObject(ToJson);
+                    foreach (var item in ControlNetModuleList["module_list"])
+                    {
+                        this.ControlNetModuleList.Add(item.ToString());
+                    }
                 }
-                while (NumberofBytes > 0);
-                string ToJson = sb.ToString();
-                JObject ControlNetModuleList = (JObject)JsonConvert.DeserializeObject(ToJson);
-                foreach (var item in ControlNetModuleList["module_list"])
+                catch(Exception ex) 
                 {
-                    this.ControlNetModuleList.Add(item.ToString());
+                System.Windows.MessageBox.Show("获取controlnet预处理器失败");
                 }
             });
             thread.Start();

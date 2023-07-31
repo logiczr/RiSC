@@ -10,7 +10,7 @@
       Title="MainPage">
 
     <Grid Background="Transparent" SnapsToDevicePixels="False">
-        <Border CornerRadius="5" Background="#FFFFEBD8">
+        <Border CornerRadius="5" Background="#FFF4F4F4">
             <Grid Margin="10">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
@@ -76,7 +76,7 @@
                 <StackPanel Grid.Column="1" Margin="5">
                     <Image Margin="10" Height="200" Source="{Binding Path=ResultImage}"></Image>
                     <Button Margin="5" Content="Save" Command="{Binding Path=SaveImage}"></Button>
-                    <Button Margin="5" Content="使用上一次生成数据" Command="{Binding Path=UseLastTimePara}"></Button>
+                    <Button Margin="5" Content="查看收藏生成参数" Command="{Binding Path=UseLastTimePara}"></Button>
                         <StackPanel Orientation="Horizontal">
                         <TextBlock Text="UpScaler/高清修复采样器" VerticalAlignment="Center"></TextBlock>
                         <ComboBox Width="120" IsEnabled="{Binding Path=IsActivateUpscaler, NotifyOnSourceUpdated=True}" SelectedItem="{Binding Path=UpscalerSelected, UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=UpscalerSampler, NotifyOnSourceUpdated=True}"></ComboBox>

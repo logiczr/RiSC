@@ -17,7 +17,7 @@
         <Border Background="AliceBlue" CornerRadius="10">
             <DockPanel LastChildFill="True">
                 <DockPanel Height="35" DockPanel.Dock="Top">
-                    <Border CornerRadius="8" Margin="2" Background="#FFEDDBC5">
+                    <Border CornerRadius="8" Margin="2" Background="Gainsboro">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="MouseLeftButtonDown">
                                 <b:InvokeCommandAction Command="{Binding Path=DragMove}"></b:InvokeCommandAction>
@@ -33,12 +33,13 @@
                         </StackPanel>
                     </Border>
                 </DockPanel>
-                    <Grid Margin="5">
+                <Grid Margin="5">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="120"></ColumnDefinition>
-                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition Width="154*"></ColumnDefinition>
+                        <ColumnDefinition Width="293*"/>
                     </Grid.ColumnDefinitions>
-                    <Border Grid.Column="0" CornerRadius="10" Background="AntiqueWhite">
+                    <Border Grid.Column="0" CornerRadius="10" Background="#FFFFFEFE">
                         <b:Interaction.Triggers>
                             <b:EventTrigger EventName="MouseLeftButtonDown">
                                 <b:InvokeCommandAction Command="{Binding Path=DragMove}"></b:InvokeCommandAction>
@@ -50,10 +51,10 @@
                             <Button  Height="40" Margin="4" Content="Settings" FontSize="15" Command="{Binding ToSettingPage}"></Button>
                             <Button  Height="40" Margin="4" Content="Developer" FontSize="15" Command="{Binding ToDeveloperPage}"></Button>
                             <Button  Height="40" Margin="4" Content="Quit" FontSize="15" FontWeight="Bold" FontStyle="Oblique" Command="{Binding Path=CloseWindow}"></Button>
-                        <Button  Height="40" Margin="4" Content="Introduction" FontSize="15" Command="{Binding Path=IntroDuctionPage}"></Button>
+                            <Button  Height="40" Margin="4" Content="Introduction" FontSize="15" Command="{Binding Path=IntroDuctionPage}"></Button>
                         </StackPanel>
                     </Border>
-                    <Border Grid.Column="1" Margin="5" CornerRadius="10" Background="Azure">
+                    <Border Grid.Column="1" Margin="5,5,5,5" CornerRadius="10" Background="Azure" Grid.ColumnSpan="2">
                         <Frame Margin="3" x:Name="Frame" NavigationUIVisibility="Hidden" Content="{Binding Path= FramePage }"></Frame>
                     </Border>
                 </Grid>
